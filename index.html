@@ -7,9 +7,9 @@
   <meta name="description" content="补剂打卡与待办清单">
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="default">
-  <link rel="manifest" href="/supplement-app/manifest.json">
+  <link rel="manifest" href="manifest.json">
   <title>补剂打卡</title>
-  <link rel="stylesheet" href="/supplement-app/style.css">
+  <link rel="stylesheet" href="style.css">
 </head>
 <body>
   <div id="app">
@@ -17,15 +17,15 @@
   </div>
 
   <script src="https://unpkg.com/vue@3.5.13/dist/vue.global.prod.js"></script>
-  <script src="/supplement-app/db.js"></script>
-  <script src="/supplement-app/reminder.js"></script>
-  <script src="/supplement-app/components/supplement.js"></script>
-  <script src="/supplement-app/components/todo.js"></script>
-  <script src="/supplement-app/app.js"></script>
+  <script src="db.js"></script>
+  <script src="reminder.js"></script>
+  <script src="components/supplement.js"></script>
+  <script src="components/todo.js"></script>
+  <script src="app.js"></script>
 
   <script>
     if ('serviceWorker' in navigator) {
-      navigator.serviceWorker.register('/supplement-app/sw.js');
+      navigator.serviceWorker.register('sw.js');
     }
   </script>
 </body>

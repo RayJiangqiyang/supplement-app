@@ -1,14 +1,14 @@
-var CACHE_NAME = 'supplement-app-v3';
+var CACHE_NAME = 'supplement-app-v4';
 var ASSETS = [
-  '/supplement-app/',
-  '/supplement-app/index.html',
-  '/supplement-app/style.css',
-  '/supplement-app/app.js',
-  '/supplement-app/db.js',
-  '/supplement-app/reminder.js',
-  '/supplement-app/components/supplement.js',
-  '/supplement-app/components/todo.js',
-  '/supplement-app/manifest.json',
+  './',
+  'index.html',
+  'style.css',
+  'app.js',
+  'db.js',
+  'reminder.js',
+  'components/supplement.js',
+  'components/todo.js',
+  'manifest.json',
   'https://unpkg.com/vue@3.5.13/dist/vue.global.prod.js'
 ];
 
