@@ -1,0 +1,20 @@
+- generic [ref=e2]:
+  - generic [ref=e31]:
+    - generic [ref=e32]:
+      - heading "📋 待办清单" [level=2] [ref=e33]
+      - generic [ref=e34]: 1项待完成
+    - generic [ref=e35]:
+      - generic [ref=e36] [cursor=pointer]: 📋 今日
+      - generic [ref=e39] [cursor=pointer]: 📅 历史
+    - generic [ref=e40]:
+      - generic [ref=e46]:
+        - generic [ref=e47]: ⋮⋮
+        - generic [ref=e49]: 买菜
+        - generic [ref=e50] [cursor=pointer]: ✕
+      - generic [ref=e42]:
+        - generic [ref=e43]: +
+        - textbox "添加新任务..." [active] [ref=e44]
+      - generic [ref=e45]: 长按左侧 ⋮⋮ 拖拽可调整顺序
+  - generic [ref=e23]:
+    - generic [ref=e24] [cursor=pointer]: 💊 补剂
+    - generic [ref=e25] [cursor=pointer]: 📋 待办

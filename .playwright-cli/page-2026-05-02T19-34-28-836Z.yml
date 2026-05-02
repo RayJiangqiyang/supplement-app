@@ -1,0 +1,20 @@
+- generic [ref=e2]:
+  - generic [ref=e4]:
+    - generic [ref=e5]:
+      - heading "💊 今日补剂" [level=2] [ref=e6]
+      - generic [ref=e7]: 2026年5月3日星期日 · 1/1 已打卡
+    - generic [ref=e8]:
+      - generic [ref=e9] [cursor=pointer]: 💊 今日
+      - generic [ref=e12] [cursor=pointer]: 📅 历史
+    - generic [ref=e13]:
+      - generic [ref=e15] [cursor=pointer]:
+        - generic [ref=e16]: ⋮⋮
+        - generic [ref=e18]: 💊
+        - generic [ref=e19]: 肌酸
+        - generic [ref=e20]: ✓ 03:34已吃
+        - generic [ref=e30]: ✓
+      - generic [ref=e21] [cursor=pointer]: + 添加补剂
+      - generic [ref=e22]: 长按卡片编辑/删除 · 拖拽调整顺序
+  - generic [ref=e23]:
+    - generic [ref=e24] [cursor=pointer]: 💊 补剂
+    - generic [ref=e25] [cursor=pointer]: 📋 待办
