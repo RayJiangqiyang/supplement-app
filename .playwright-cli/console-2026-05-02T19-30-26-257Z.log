@@ -1,0 +1,9 @@
+[    1234ms] [ERROR] Failed to load resource: the server responded with a status of 404 (Not Found) @ http://localhost:3000/favicon.ico:0
+[   51609ms] [ERROR] TypeError: Cannot read properties of undefined (reading 'innerHeight')
+    at Proxy.render (eval at aY (https://unpkg.com/vue@3.5.13/dist/vue.global.prod.js:9:318), <anonymous>:178:92)
+    at r2 (https://unpkg.com/vue@3.5.13/dist/vue.global.prod.js:5:57300)
+    at ek.a [as fn] (https://unpkg.com/vue@3.5.13/dist/vue.global.prod.js:5:47594)
+    at ek.run (https://unpkg.com/vue@3.5.13/dist/vue.global.prod.js:5:6967)
+    at ek.runIfDirty (https://unpkg.com/vue@3.5.13/dist/vue.global.prod.js:5:7276)
+    at tq (https://unpkg.com/vue@3.5.13/dist/vue.global.prod.js:5:20044)
+    at e (https://unpkg.com/vue@3.5.13/dist/vue.global.prod.js:5:21154) @ https://unpkg.com/vue@3.5.13/dist/vue.global.prod.js:4

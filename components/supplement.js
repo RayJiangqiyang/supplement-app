@@ -75,6 +75,15 @@ const SupplementTab = {
       this.contextMenu = null;
     },
 
+    contextMenuStyle() {
+      if (!this.contextMenu) return { display: 'none' };
+      return {
+        position: 'fixed',
+        top: Math.min(this.contextMenu.y, window.innerHeight - 80) + 'px',
+        left: Math.min(this.contextMenu.x, window.innerWidth - 160) + 'px'
+      };
+    },
+
     editSupplement(s) {
       this.contextMenu = null;
       this.formMode = 'edit';
@@ -339,7 +348,7 @@ const SupplementTab = {
 
       <!-- Context Menu -->
       <div v-if="contextMenu" class="modal-overlay" style="background:transparent;z-index:149" @click="closeContextMenu">
-        <div class="context-menu" :style="{ position:'fixed', top: Math.min(contextMenu.y, window.innerHeight - 80) + 'px', left: Math.min(contextMenu.x, window.innerWidth - 160) + 'px' }" @click.stop>
+        <div class="context-menu" :style="contextMenuStyle()" @click.stop>
           <div class="menu-item" @click.stop="editSupplement(contextMenu.supplement)">✏️ 编辑</div>
           <div class="menu-item danger" @click.stop="confirmDelete(contextMenu.supplement)">🗑 删除</div>
         </div>
