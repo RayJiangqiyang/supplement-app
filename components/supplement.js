@@ -30,6 +30,10 @@ const SupplementTab = {
     await this.loadData();
   },
 
+  beforeUnmount() {
+    this.cancelLongPress();
+  },
+
   methods: {
     async loadData() {
       this.supplements = await getSupplements();
@@ -134,9 +138,16 @@ const SupplementTab = {
     onPhotoChange(e) {
       const file = e.target.files[0];
       if (!file) return;
+      if (file.size > 500 * 1024) {
+        alert('图片不能超过 500KB，请使用更小的照片');
+        return;
+      }
       const reader = new FileReader();
       reader.onload = (ev) => {
         this.formPhoto = ev.target.result;
+      };
+      reader.onerror = () => {
+        alert('图片读取失败');
       };
       reader.readAsDataURL(file);
     },
