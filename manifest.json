@@ -1,6 +1,6 @@
 {
   "name": "补剂打卡",
-  "short_name": "补剂打卡",
+  "short_name": "补剂",
   "description": "补剂打卡与待办清单",
   "start_url": "/",
   "display": "standalone",
