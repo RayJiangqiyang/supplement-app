@@ -57,9 +57,9 @@ const SupplementTab = {
 
     startLongPress(supplement, event) {
       this.cancelLongPress();
+      const x = event.touches ? event.touches[0].clientX : event.clientX;
+      const y = event.touches ? event.touches[0].clientY : event.clientY;
       this.longPressTimer = setTimeout(() => {
-        const x = event.touches ? event.touches[0].clientX : event.clientX;
-        const y = event.touches ? event.touches[0].clientY : event.clientY;
         this.contextMenu = { supplement, x, y };
       }, 500);
     },
@@ -256,7 +256,7 @@ const SupplementTab = {
   },
 
   template: `
-    <div @click="closeContextMenu">
+    <div>
       <div class="page-header">
         <h2>💊 今日补剂</h2>
         <div class="page-subtitle">{{ new Date().toLocaleDateString('zh-CN', { year:'numeric',month:'long',day:'numeric',weekday:'long' }) }} · {{ supplements.filter(s => isTaken(s.id)).length }}/{{ supplements.length }} 已打卡</div>
@@ -338,9 +338,11 @@ const SupplementTab = {
       </div>
 
       <!-- Context Menu -->
-      <div v-if="contextMenu" class="context-menu" :style="{ top: contextMenu.y + 'px', left: Math.min(contextMenu.x, window.innerWidth - 160) + 'px' }" @click.stop>
-        <div class="menu-item" @click.stop="editSupplement(contextMenu.supplement)">✏️ 编辑</div>
-        <div class="menu-item danger" @click.stop="confirmDelete(contextMenu.supplement)">🗑 删除</div>
+      <div v-if="contextMenu" class="modal-overlay" style="background:transparent;z-index:149" @click="closeContextMenu">
+        <div class="context-menu" :style="{ position:'fixed', top: Math.min(contextMenu.y, window.innerHeight - 80) + 'px', left: Math.min(contextMenu.x, window.innerWidth - 160) + 'px' }" @click.stop>
+          <div class="menu-item" @click.stop="editSupplement(contextMenu.supplement)">✏️ 编辑</div>
+          <div class="menu-item danger" @click.stop="confirmDelete(contextMenu.supplement)">🗑 删除</div>
+        </div>
       </div>
 
       <!-- Add/Edit Form Modal -->
