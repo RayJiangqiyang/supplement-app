@@ -111,6 +111,7 @@ async function deleteSupplement(id) {
 
 async function updateSupplementOrder(orderedIds) {
   return new Promise((resolve, reject) => {
+    if (orderedIds.length === 0) return resolve();
     const tx = db.transaction('supplements', 'readwrite');
     const store = tx.objectStore('supplements');
     let count = 0;
@@ -181,7 +182,8 @@ async function deleteTodo(id) {
     const tx = db.transaction(['todos', 'todo_log'], 'readwrite');
     tx.objectStore('todos').delete(id);
     const logStore = tx.objectStore('todo_log');
-    const cursorReq = logStore.openCursor();
+    const index = logStore.index('todoId');
+    const cursorReq = index.openCursor(IDBKeyRange.only(id));
     cursorReq.onsuccess = (e) => {
       const cursor = e.target.result;
       if (cursor) {
@@ -196,6 +198,7 @@ async function deleteTodo(id) {
 
 async function updateTodoOrder(orderedIds) {
   return new Promise((resolve, reject) => {
+    if (orderedIds.length === 0) return resolve();
     const tx = db.transaction('todos', 'readwrite');
     const store = tx.objectStore('todos');
     let count = 0;
