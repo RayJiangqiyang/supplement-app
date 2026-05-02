@@ -1,0 +1,8 @@
+[     273ms] [ERROR] Failed to load resource: the server responded with a status of 404 () @ https://rayjiangqiyang.github.io/style.css:0
+[     283ms] [ERROR] Failed to load resource: the server responded with a status of 404 () @ https://rayjiangqiyang.github.io/reminder.js:0
+[     283ms] [ERROR] Failed to load resource: the server responded with a status of 404 () @ https://rayjiangqiyang.github.io/db.js:0
+[     284ms] [ERROR] Failed to load resource: the server responded with a status of 404 () @ https://rayjiangqiyang.github.io/components/todo.js:0
+[     284ms] [ERROR] Failed to load resource: the server responded with a status of 404 () @ https://rayjiangqiyang.github.io/app.js:0
+[     285ms] [ERROR] Failed to load resource: the server responded with a status of 404 () @ https://rayjiangqiyang.github.io/components/supplement.js:0
+[     590ms] [ERROR] A bad HTTP response code (404) was received when fetching the script. @ :0
+[     591ms] Failed to register a ServiceWorker for scope ('https://rayjiangqiyang.github.io/') with script ('https://rayjiangqiyang.github.io/sw.js'): A bad HTTP response code (404) was received when fetching the script.
