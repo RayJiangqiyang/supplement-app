@@ -20,6 +20,8 @@ const SupplementTab = {
       selectedDate: null,
       selectedDateLogs: [],
       selectedDateSupplements: [],
+      longPressTimer: null,
+      longPressFired: false,
       emojiOptions: ['💊', '💪', '🥚', '🐟', '🦴', '🧬', '🫁', '❤️', '🧠', '🦷', '👁️', '🌿', '🍄', '💉', '🧪', '🩹', '🥛', '🍊', '🫒', '🥜']
     };
   },
@@ -45,20 +47,35 @@ const SupplementTab = {
     },
 
     async toggleSupplement(supplementId) {
+      if (this.longPressFired) {
+        this.longPressFired = false;
+        return;
+      }
       await markSupplementTaken(supplementId);
       await this.loadData();
     },
 
-    onMenuTap(supplement) {
-      // 手机上点 ⋯ 按钮直接弹出菜单
-      this.contextMenu = { supplement, x: 10, y: window.innerHeight / 2 };
+    startLongPress(supplement, event) {
+      this.cancelLongPress();
+      this.longPressFired = false;
+      const x = event.touches ? event.touches[0].clientX : event.clientX;
+      const y = event.touches ? event.touches[0].clientY : event.clientY;
+      this.longPressTimer = setTimeout(() => {
+        this.longPressFired = true;
+        this.contextMenu = { supplement, x, y };
+      }, 500);
     },
 
-    startLongPress(supplement, event) {
-      // 桌面上鼠标悬停到 ⋯ 按钮时打开菜单
-      if (!event.touches) {
-        this.contextMenu = { supplement, x: event.clientX, y: event.clientY };
+    cancelLongPress() {
+      if (this.longPressTimer) {
+        clearTimeout(this.longPressTimer);
+        this.longPressTimer = null;
       }
+    },
+
+    showCardMenu(supplement) {
+      this.cancelLongPress();
+      this.contextMenu = { supplement, x: window.innerWidth / 2, y: window.innerHeight / 2 };
     },
 
     closeContextMenu() {
@@ -251,6 +268,10 @@ const SupplementTab = {
             class="supplement-card"
             :class="{ taken: isTaken(s.id) }"
             @click="toggleSupplement(s.id)"
+            @touchstart="startLongPress(s, $event)"
+            @touchend="cancelLongPress"
+            @touchmove="cancelLongPress"
+            @contextmenu.prevent
           >
             <div class="card-icon">
               <img v-if="s.photo" :src="s.photo" style="width:100%;height:100%;object-fit:cover;border-radius:12px" />
@@ -262,13 +283,13 @@ const SupplementTab = {
               <template v-else>点击打卡</template>
             </div>
             <div v-if="isTaken(s.id)" class="card-check">✓</div>
-            <div class="card-menu-btn" @click.stop="startLongPress(s, $event)" @touchend.stop="onMenuTap(s)">⋯</div>
+            <div class="card-menu-btn" @click.stop="showCardMenu(s)" @touchstart.stop>⋯</div>
           </div>
         </div>
 
         <div class="add-supplement-btn" @click="openAddForm">+ 添加补剂</div>
 
-        <div class="hint-text">点击卡片打卡 · 点 ⋯ 编辑/删除</div>
+        <div class="hint-text">点击打卡 · 长按卡片或点 ⋯ 编辑</div>
       </div>
 
       <!-- History view -->
