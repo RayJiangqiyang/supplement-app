@@ -1,4 +1,4 @@
-var CACHE_NAME = 'supplement-app-v4';
+var CACHE_NAME = 'supplement-app-v6';
 var ASSETS = [
   './',
   'index.html',
@@ -15,7 +15,7 @@ var ASSETS = [
 self.addEventListener('install', function(e) {
   e.waitUntil(
     caches.open(CACHE_NAME).then(function(cache) {
-      return cache.addAll(ASSETS);
+      return cache.addAll(ASSETS).catch(function() { /* some assets may fail, that's ok */ });
     })
   );
   self.skipWaiting();
@@ -35,17 +35,25 @@ self.addEventListener('activate', function(e) {
 });
 
 self.addEventListener('fetch', function(e) {
+  // Only handle GET requests for our own assets
+  if (e.request.method !== 'GET') return;
+
+  var url = new URL(e.request.url);
+  var isVueCDN = url.hostname === 'unpkg.com';
+  var isLocal = url.origin === self.location.origin;
+  if (!isLocal && !isVueCDN) return;
+
   e.respondWith(
-    caches.match(e.request).then(function(cached) {
-      return cached || fetch(e.request).then(function(response) {
-        if (response.ok && response.type === 'basic') {
-          var clone = response.clone();
-          caches.open(CACHE_NAME).then(function(cache) {
-            cache.put(e.request, clone);
-          });
-        }
-        return response;
-      });
+    fetch(e.request).then(function(response) {
+      if (response.ok) {
+        var clone = response.clone();
+        caches.open(CACHE_NAME).then(function(cache) {
+          cache.put(e.request, clone);
+        });
+      }
+      return response;
+    }).catch(function() {
+      return caches.match(e.request);
     })
   );
 });

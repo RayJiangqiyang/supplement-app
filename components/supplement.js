@@ -20,18 +20,12 @@ const SupplementTab = {
       selectedDate: null,
       selectedDateLogs: [],
       selectedDateSupplements: [],
-      dragIndex: null,
-      longPressTimer: null,
       emojiOptions: ['💊', '💪', '🥚', '🐟', '🦴', '🧬', '🫁', '❤️', '🧠', '🦷', '👁️', '🌿', '🍄', '💉', '🧪', '🩹', '🥛', '🍊', '🫒', '🥜']
     };
   },
 
   async mounted() {
     await this.loadData();
-  },
-
-  beforeUnmount() {
-    this.cancelLongPress();
   },
 
   methods: {
@@ -55,19 +49,15 @@ const SupplementTab = {
       await this.loadData();
     },
 
-    startLongPress(supplement, event) {
-      this.cancelLongPress();
-      const x = event.touches ? event.touches[0].clientX : event.clientX;
-      const y = event.touches ? event.touches[0].clientY : event.clientY;
-      this.longPressTimer = setTimeout(() => {
-        this.contextMenu = { supplement, x, y };
-      }, 500);
+    onMenuTap(supplement) {
+      // 手机上点 ⋯ 按钮直接弹出菜单
+      this.contextMenu = { supplement, x: 10, y: window.innerHeight / 2 };
     },
 
-    cancelLongPress() {
-      if (this.longPressTimer) {
-        clearTimeout(this.longPressTimer);
-        this.longPressTimer = null;
+    startLongPress(supplement, event) {
+      // 桌面上鼠标悬停到 ⋯ 按钮时打开菜单
+      if (!event.touches) {
+        this.contextMenu = { supplement, x: event.clientX, y: event.clientY };
       }
     },
 
@@ -239,29 +229,6 @@ const SupplementTab = {
       return days;
     },
 
-    // Drag and drop
-    onDragStart(index, e) {
-      this.dragIndex = index;
-      e.dataTransfer.effectAllowed = 'move';
-      e.dataTransfer.setData('text/plain', String(index));
-    },
-
-    onDragOver(index, e) {
-      e.preventDefault();
-      e.dataTransfer.dropEffect = 'move';
-    },
-
-    async onDrop(index, e) {
-      e.preventDefault();
-      const fromIndex = this.dragIndex;
-      if (fromIndex === null || fromIndex === index) return;
-      const items = [...this.supplements];
-      const [moved] = items.splice(fromIndex, 1);
-      items.splice(index, 0, moved);
-      this.supplements = items;
-      this.dragIndex = null;
-      await updateSupplementOrder(items.map(s => s.id));
-    }
   },
 
   template: `
@@ -283,23 +250,12 @@ const SupplementTab = {
       <div v-if="!showHistory">
         <div class="supplement-grid">
           <div
-            v-for="(s, index) in supplements"
+            v-for="s in supplements"
             :key="s.id"
             class="supplement-card"
             :class="{ taken: isTaken(s.id) }"
-            draggable="true"
             @click="toggleSupplement(s.id)"
-            @touchstart.prevent="startLongPress(s, $event)"
-            @touchend="cancelLongPress"
-            @touchmove="cancelLongPress"
-            @mousedown="startLongPress(s, $event)"
-            @mouseup="cancelLongPress"
-            @mouseleave="cancelLongPress"
-            @dragstart="onDragStart(index, $event)"
-            @dragover="onDragOver(index, $event)"
-            @drop="onDrop(index, $event)"
           >
-            <span class="drag-handle" @click.stop @mousedown.stop>⋮⋮</span>
             <div class="card-icon">
               <img v-if="s.photo" :src="s.photo" style="width:100%;height:100%;object-fit:cover;border-radius:12px" />
               <span v-else>{{ s.icon }}</span>
@@ -310,12 +266,13 @@ const SupplementTab = {
               <template v-else>点击打卡</template>
             </div>
             <div v-if="isTaken(s.id)" class="card-check">✓</div>
+            <div class="card-menu-btn" @click.stop="startLongPress(s, $event)" @touchend.stop="onMenuTap(s)">⋯</div>
           </div>
         </div>
 
         <div class="add-supplement-btn" @click="openAddForm">+ 添加补剂</div>
 
-        <div class="hint-text">长按卡片编辑/删除 · 拖拽调整顺序</div>
+        <div class="hint-text">点击卡片打卡 · 点 ⋯ 编辑/删除</div>
       </div>
 
       <!-- History view -->
