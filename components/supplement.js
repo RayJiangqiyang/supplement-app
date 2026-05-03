@@ -137,10 +137,6 @@ const SupplementTab = {
     onPhotoChange(e) {
       const file = e.target.files[0];
       if (!file) return;
-      if (file.size > 500 * 1024) {
-        alert('图片不能超过 500KB，请使用更小的照片');
-        return;
-      }
       const reader = new FileReader();
       reader.onload = (ev) => {
         this.formPhoto = ev.target.result;
@@ -328,8 +324,8 @@ const SupplementTab = {
           <input v-model="formName" class="modal-input" placeholder="补剂名称" @keyup.enter="saveSupplement" />
 
           <label style="font-size:12px;color:#999;margin-bottom:6px;display:block">
-            📸 拍照
-            <input type="file" accept="image/*" capture="environment" @change="onPhotoChange" style="display:block;margin-top:4px" />
+            📸 选择图片（可拍照或从相册选择）
+            <input type="file" accept="image/*" @change="onPhotoChange" style="display:block;margin-top:4px" />
           </label>
 
           <div style="margin-bottom:10px">

@@ -1,4 +1,4 @@
-var CACHE_NAME = 'supplement-app-v6';
+var CACHE_NAME = 'supplement-app-v7';
 var ASSETS = [
   './',
   'index.html',

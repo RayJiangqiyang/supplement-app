@@ -4,10 +4,11 @@ const TodoTab = {
       todos: [],
       todayTodoLogs: [],
       newTodoText: '',
+      newTodoPhoto: null,
+      showPhoto: null,
       showHistory: false,
       historyLogs: [],
-      historyTodos: [],
-      dragIndex: null
+      historyTodos: []
     };
   },
 
@@ -38,9 +39,26 @@ const TodoTab = {
     async addNewTodo() {
       const text = this.newTodoText.trim();
       if (!text) return;
-      await addTodo(text);
+      await addTodo({ text, photo: this.newTodoPhoto });
       this.newTodoText = '';
+      this.newTodoPhoto = null;
       await this.loadData();
+    },
+
+    onTodoPhotoChange(e) {
+      const file = e.target.files[0];
+      if (!file) return;
+      const reader = new FileReader();
+      reader.onload = (ev) => { this.newTodoPhoto = ev.target.result; };
+      reader.readAsDataURL(file);
+    },
+
+    openPhoto(photo) {
+      this.showPhoto = photo;
+    },
+
+    closePhoto() {
+      this.showPhoto = null;
     },
 
     // History
@@ -69,29 +87,6 @@ const TodoTab = {
       return todo ? todo.text : '(已删除)';
     },
 
-    // Drag and drop
-    onDragStart(index, e) {
-      this.dragIndex = index;
-      e.dataTransfer.effectAllowed = 'move';
-      e.dataTransfer.setData('text/plain', String(index));
-    },
-
-    onDragOver(index, e) {
-      e.preventDefault();
-      e.dataTransfer.dropEffect = 'move';
-    },
-
-    async onDrop(index, e) {
-      e.preventDefault();
-      const fromIndex = this.dragIndex;
-      if (fromIndex === null || fromIndex === index) return;
-      const items = [...this.todos];
-      const [moved] = items.splice(fromIndex, 1);
-      items.splice(index, 0, moved);
-      this.todos = items;
-      this.dragIndex = null;
-      await updateTodoOrder(items.map(t => t.id));
-    }
   },
 
   template: `
@@ -113,34 +108,36 @@ const TodoTab = {
       <div v-if="!showHistory">
         <div class="todo-list">
           <div
-            v-for="(t, index) in todos"
+            v-for="t in todos"
             :key="t.id"
             class="todo-item"
             :class="{ done: isDone(t.id) }"
-            draggable="true"
-            @dragstart="onDragStart(index, $event)"
-            @dragover="onDragOver(index, $event)"
-            @drop="onDrop(index, $event)"
           >
-            <span class="drag-handle">⋮⋮</span>
             <div class="todo-check" @click="toggleTodo(t.id)">
               <span v-if="isDone(t.id)">✓</span>
             </div>
             <span class="todo-text">{{ t.text }}</span>
+            <img v-if="t.photo" :src="t.photo" class="todo-photo" @click.stop="openPhoto(t.photo)" />
             <span class="todo-delete" @click="removeTodo(t.id)">✕</span>
           </div>
         </div>
 
         <div class="add-todo-bar">
-          <span class="add-icon">+</span>
+          <label class="add-todo-photo-btn">
+            📷<input type="file" accept="image/*" @change="onTodoPhotoChange" style="display:none" />
+          </label>
+          <img v-if="newTodoPhoto" :src="newTodoPhoto" class="add-todo-photo-preview" @click="newTodoPhoto = null" />
           <input
             v-model="newTodoText"
             placeholder="添加新任务..."
             @keyup.enter="addNewTodo"
           />
         </div>
+      </div>
 
-        <div class="hint-text">长按左侧 ⋮⋮ 拖拽可调整顺序</div>
+      <!-- Photo viewer -->
+      <div v-if="showPhoto" class="modal-overlay" style="z-index:300" @click="closePhoto">
+        <img :src="showPhoto" style="max-width:94%;max-height:90%;border-radius:10px;object-fit:contain;box-shadow:0 4px 30px rgba(0,0,0,0.3)" @click.stop />
       </div>
 
       <!-- History view -->

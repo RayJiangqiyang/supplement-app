@@ -145,10 +145,13 @@ async function getTodos() {
   });
 }
 
-async function addTodo(text) {
+async function addTodo(data) {
+  const text = typeof data === 'string' ? data : data.text;
+  const photo = typeof data === 'object' ? data.photo : null;
   const item = {
     id: generateId(),
     text,
+    photo: photo || null,
     sortOrder: Date.now(),
     createdAt: Date.now()
   };
@@ -169,6 +172,7 @@ async function updateTodo(id, data) {
       const item = getReq.result;
       if (!item) return reject(new Error('not found'));
       if (data.text !== undefined) item.text = data.text;
+      if (data.photo !== undefined) item.photo = data.photo;
       if (data.sortOrder !== undefined) item.sortOrder = data.sortOrder;
       store.put(item);
       tx.oncomplete = () => resolve(item);
